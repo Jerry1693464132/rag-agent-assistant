@@ -1,4 +1,5 @@
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_ollama import OllamaEmbeddings
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import chromadb
@@ -105,7 +106,12 @@ TOOLS = {
 }
 
 # ==================== 3. 模型 + 提示词 ====================
-model = ChatOllama(model="qwen2.5:3b", temperature=0)
+model = ChatOpenAI(
+    model="deepseek-reasoner",
+    api_key="sk-47266ff370f344d08795ae330bf2b084",          # 换成你自己的 Key
+    base_url="https://api.deepseek.com",
+    temperature=0
+)
 
 SYSTEM_PROMPT = """你是一个智能助手，你可以使用以下工具来完成用户的任务：
 

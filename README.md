@@ -15,10 +15,9 @@ Python | LangChain | ChromaDB | Ollama | SMTP
 ## 怎么跑起来
 
 1. 安装 Ollama：https://ollama.com/download
-2. 下载模型：ollama pull qwen2.5:3b  可调用api deepseek r1
-ollama pull nomic-embed-text
-3. 安装依赖：pip install -r requirements.txt
-4. 
+2. 调用api deepseek r1
+3. ollama pull nomic-embed-text
+4. 安装依赖：pip install -r requirements.txt
 ## 项目结构
 
 - agent_with_rag.py — 主程序

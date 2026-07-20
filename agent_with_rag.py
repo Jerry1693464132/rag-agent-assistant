@@ -180,11 +180,12 @@ print("║   RAG + Agent 智能助手           ║")
 print("║   输入 '退出' 结束对话           ║")
 print("╚══════════════════════════════════╝")
 
-while True:
-    user_msg = input("\n🧑 你: ")
-    if user_msg.lower() in ["退出", "quit", "exit", "q"]:
-        print("👋 再见！")
-        break
-    if user_msg.strip() == "":
-        continue
-    run_agent(user_msg)
+if __name__ == "__main__":
+    while True:
+        user_msg = input("\n🧑 你: ")
+        if user_msg.lower() in ["退出", "quit", "exit", "q"]:
+            print("👋 再见！")
+            break
+        if user_msg.strip() == "":
+            continue
+        run_agent(user_msg)

@@ -64,7 +64,7 @@ def send_email(to, subject, body):
 
     # 通讯录：中文名 → 邮箱地址（按需修改）
     email_book = {
-        "清风": "3753409971@qq.com",
+        "小风": "3753409971@qq.com",
         "王经理": "wang@company.com",
         "小明": "xiaoming@qq.com",
         "醉孤一": "468068115@qq.com",
@@ -115,12 +115,20 @@ model = ChatOpenAI(
 
 SYSTEM_PROMPT = """你是一个智能助手，你可以使用以下工具来完成用户的任务：
 
-工具1：search_company_docs(query) — 搜索公司内部文档，参数query是用户的自然语言问题（如"年假有几天""迟到怎么扣钱"）
-工具2：send_email(to, subject, body) — 发送邮件。to必须是用户明确指定的人名或邮箱（如"张三"或"abc@qq.com"），subject是邮件主题，body是邮件正文。绝对不要把to填成"收件人"或"收件人邮箱地址"这类描述文字。
+工具1：search_company_docs(query) — 搜索公司内部文档。只有当用户问的是公司制度相关的问题（年假、考勤、报销、培训等）时，才使用此工具。
+工具2：send_email(to, subject, body) — 发送邮件。当用户要求发邮件、发笑话、发消息给某人时，直接使用此工具。
+
+通讯录名单（send_email 的 to 参数可以直接用这些名字）：
+- 小风
+- 王经理
+- 小明
+- 醉孤一
 
 使用规则：
-- 用户问公司制度相关的问题，必须先用 search_company_docs 搜索文档
-- 用户让你写邮件，先搜文档确认相关信息，再发邮件
+- 用户让你发邮件、发笑话、发消息给通讯录里的人，直接调用 send_email，不要先搜文档
+- 用户问公司制度（年假、考勤、报销、培训），先调用 search_company_docs
+- 调用 send_email 时，to 直接用人名，不要加引号
+- 调用 send_email 时，subject 和 body 不要用引号包裹
 - 需要调工具时，只输出：TOOL_CALL: 工具名(参数1, 参数2, ...)
 - 不需要调工具时，直接回复"""
 
@@ -152,8 +160,8 @@ def run_agent(user_input, max_steps=5):
             if match:
                 tool_name = match.group(1)
                 args_str = match.group(2)
-                parts = args_str.split(",", 2)  # 最多切 2 次，得到最多 3 段
-                args = [p.strip() for p in parts]
+                parts = args_str.split(",", 2)  # 最多切 2 次，得到最多 3 段（函数最多参数为3）
+                args = [p.strip().strip('"').strip("'") for p in parts]
 
                 if tool_name in TOOLS:
                     try:
@@ -186,6 +194,5 @@ if __name__ == "__main__":
         if user_msg.lower() in ["退出", "quit", "exit", "q"]:
             print("👋 再见！")
             break
-        if user_msg.strip() == "":
-            continue
+
         run_agent(user_msg)
